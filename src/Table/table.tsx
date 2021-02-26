@@ -1,6 +1,6 @@
 import React, { FC } from 'react'
 import { STable } from './Table.styles'
-import { Accessor, Column } from 'react-table'
+import { useTable } from 'react-table'
 type tColumn = {
   Header: string
   accessor: string
@@ -18,6 +18,10 @@ const Table: FC<tTable> = ({ columns }) => {
           <h3 key={`header-${i}`}>{Header}</h3>
         ))}
       </header>
+      <div className={'table-body'}>
+        <div className={'row'}></div>
+        <div className={'row'}></div>
+      </div>
     </STable>
   )
 }
