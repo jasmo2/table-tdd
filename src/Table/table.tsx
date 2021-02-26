@@ -8,19 +8,34 @@ type tColumn = {
 
 type tTable = {
   columns: tColumn[]
+  data: { [s: string]: any }[]
 }
 
-const Table: FC<tTable> = ({ columns }) => {
+const Table: FC<tTable> = ({ columns, data }) => {
+  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
+    columns,
+    data,
+  })
   return (
-    <STable>
+    <STable {...getTableProps()}>
       <header>
-        {columns.map(({ Header, accessor }, i) => (
-          <h3 key={`header-${i}`}>{Header}</h3>
+        {headerGroups.map((headerGroup, i) => (
+          <h3 {...headerGroup.getHeaderGroupProps()} key={`column-${i}`}>
+            {headerGroup.headers.map((column) => (
+              <>{column.render('Header')}</>
+            ))}
+          </h3>
         ))}
       </header>
-      <div className={'table-body'}>
-        <div className={'row'}></div>
-        <div className={'row'}></div>
+      <div className={'table-body'} {...getTableBodyProps}>
+        {rows.map((row, i) => {
+          prepareRow(row)
+          return (
+            <div className={'row'} {...row.getRowProps()} key={`row-${i}`}>
+              {row.cells.map((cell) => cell.render('Cell'))}
+            </div>
+          )
+        })}
       </div>
     </STable>
   )

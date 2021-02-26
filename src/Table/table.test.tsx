@@ -1,6 +1,6 @@
 import React from 'react'
 import { MdDelete } from 'react-icons/md'
-import { render, screen } from '@testing-library/react'
+import { render, screen, within } from '@testing-library/react'
 import Table from './table'
 
 const columns = [
@@ -17,11 +17,11 @@ const data = [
 
 describe('Table', () => {
   test('renders properly', () => {
-    render(<Table columns={columns} />)
+    render(<Table columns={columns} data={data} />)
   })
 
   test('Header base on input', () => {
-    render(<Table columns={columns} />)
+    render(<Table columns={columns} data={data} />)
 
     for (const column of columns) {
       const header = screen.getByText(new RegExp(column.Header))
@@ -36,5 +36,12 @@ describe('Table', () => {
     const numberOfRows = data.length
     const rows = container.querySelectorAll('.row')
     expect(rows.length).toEqual(numberOfRows)
+  })
+
+  test('display Cell data correctly', () => {
+    const { container } = render(<Table columns={columns} data={data} />)
+    const rowEl = container.querySelector('.table-body')?.firstElementChild as HTMLElement
+
+    expect(within(rowEl).getByText(/Miguel/)).toBeInTheDocument()
   })
 })
