@@ -7,7 +7,13 @@ const columns = [
   { Header: 'Name', accessor: 'name' },
   { Header: 'Surname', accessor: 'surname' },
   { Header: 'Phone', accessor: 'phone' },
-  { Header: 'Actions', accessor: 'actions' },
+  {
+    Header: 'Actions',
+    accessor: 'actions',
+    Cell: (props: any) => {
+      return <div className={'svg-wrapper'}>{props.value}</div>
+    },
+  },
 ]
 
 const data = [
@@ -39,9 +45,15 @@ describe('Table', () => {
   })
 
   test('display Cell data correctly', () => {
-    const { container } = render(<Table columns={columns} data={data} />)
+    const { container, debug } = render(<Table columns={columns} data={data} />)
     const rowEl = container.querySelector('.table-body')?.firstElementChild as HTMLElement
+    expect(rowEl.firstElementChild).toHaveClass('cell')
 
-    expect(within(rowEl).getByText(/Miguel/)).toBeInTheDocument()
+    const row = within(rowEl)
+    const firstRowData = data[0]
+    expect(row.getByText(new RegExp(firstRowData.name))).toBeInTheDocument()
+    expect(row.getByText(new RegExp(firstRowData.phone))).toBeInTheDocument()
+    expect(row.getByText(new RegExp(firstRowData.surname))).toBeInTheDocument()
+    expect(rowEl.querySelector('.svg-wrapper')).toBeInTheDocument()
   })
 })

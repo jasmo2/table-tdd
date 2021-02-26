@@ -20,9 +20,9 @@ const Table: FC<tTable> = ({ columns, data }) => {
     <STable {...getTableProps()}>
       <header>
         {headerGroups.map((headerGroup, i) => (
-          <h3 {...headerGroup.getHeaderGroupProps()} key={`column-${i}`}>
+          <h3 {...headerGroup.getHeaderGroupProps()}>
             {headerGroup.headers.map((column) => (
-              <>{column.render('Header')}</>
+              <span {...column.getHeaderProps()}>{column.render('Header')}</span>
             ))}
           </h3>
         ))}
@@ -32,7 +32,11 @@ const Table: FC<tTable> = ({ columns, data }) => {
           prepareRow(row)
           return (
             <div className={'row'} {...row.getRowProps()} key={`row-${i}`}>
-              {row.cells.map((cell) => cell.render('Cell'))}
+              {row.cells.map((cell) => (
+                <span className={'cell'} {...cell.getCellProps()}>
+                  {cell.render('Cell')}
+                </span>
+              ))}
             </div>
           )
         })}
