@@ -1,6 +1,6 @@
 import React from 'react'
 import { MdDelete } from 'react-icons/md'
-import { render, screen, within } from '@testing-library/react'
+import { render, screen, within, fireEvent } from '@testing-library/react'
 import Table from './table'
 
 const columns = [
@@ -18,6 +18,7 @@ const columns = [
 
 const data = [
   { name: 'Miguel', surname: 'Kun', phone: '123123', actions: <MdDelete /> },
+  { name: 'Adrian', surname: 'Miyagui', phone: '678654', actions: <MdDelete /> },
   { name: 'Tatiana', surname: 'Min', phone: '980980', actions: <MdDelete /> },
 ]
 
@@ -36,16 +37,16 @@ describe('Table', () => {
   })
 
   test('display Rows correctly', () => {
-    const { container } = render(<Table columns={columns} data={data} />)
+    const { container, getAllByRole } = render(<Table columns={columns} data={data} />)
     expect(container.querySelector('.table-body')?.firstElementChild).toHaveClass('row')
+    const rows = getAllByRole('row')
 
-    const numberOfRows = data.length
-    const rows = container.querySelectorAll('.row')
+    const numberOfRows = data.length + 1
     expect(rows.length).toEqual(numberOfRows)
   })
 
   test('display Cell data correctly', () => {
-    const { container, debug } = render(<Table columns={columns} data={data} />)
+    const { container } = render(<Table columns={columns} data={data} />)
     const rowEl = container.querySelector('.table-body')?.firstElementChild as HTMLElement
     expect(rowEl.firstElementChild).toHaveClass('cell')
 
@@ -55,5 +56,22 @@ describe('Table', () => {
     expect(row.getByText(new RegExp(firstRowData.phone))).toBeInTheDocument()
     expect(row.getByText(new RegExp(firstRowData.surname))).toBeInTheDocument()
     expect(rowEl.querySelector('.svg-wrapper')).toBeInTheDocument()
+  })
+
+  describe('Sort', () => {
+    test('if sorted enable the colums should rearrange', () => {
+      let { getAllByRole, debug } = render(<Table columns={columns} data={data} sort />)
+
+      let rows = getAllByRole('row')
+      const tableHeader = rows[0]
+      const firstHeaderLabel = within(tableHeader).getAllByRole('columnheader')[0]
+      expect(firstHeaderLabel).toHaveTextContent('Name')
+
+      fireEvent.click(firstHeaderLabel)
+      rows = getAllByRole('row')
+      const tableFirstRow = rows[1].firstElementChild
+
+      expect(tableFirstRow).toHaveTextContent('Adrian')
+    })
   })
 })

@@ -1,6 +1,6 @@
 import React, { FC } from 'react'
 import { STable } from './Table.styles'
-import { useTable } from 'react-table'
+import { useTable, useSortBy } from 'react-table'
 type tColumn = {
   Header: string
   accessor: string
@@ -9,20 +9,24 @@ type tColumn = {
 type tTable = {
   columns: tColumn[]
   data: { [s: string]: any }[]
+  sort?: null | boolean
 }
 
-const Table: FC<tTable> = ({ columns, data }) => {
-  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
-    columns,
-    data,
-  })
+const Table: FC<tTable> = ({ columns, data, sort = null }) => {
+  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable(
+    {
+      columns,
+      data,
+    },
+    useSortBy
+  )
   return (
     <STable {...getTableProps()}>
       <header>
         {headerGroups.map((headerGroup, i) => (
           <h3 {...headerGroup.getHeaderGroupProps()}>
             {headerGroup.headers.map((column) => (
-              <span {...column.getHeaderProps()}>{column.render('Header')}</span>
+              <span {...column.getHeaderProps(column.getSortByToggleProps())}>{column.render('Header')}</span>
             ))}
           </h3>
         ))}
