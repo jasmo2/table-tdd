@@ -9,14 +9,15 @@ type tColumn = {
 type tTable = {
   columns: tColumn[]
   data: { [s: string]: any }[]
-  sort?: null | boolean
+  sort?: boolean
 }
 
-const Table: FC<tTable> = ({ columns, data, sort = null }) => {
+const Table: FC<tTable> = ({ columns, data, sort = false }) => {
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable(
     {
       columns,
       data,
+      disableSortBy: !sort,
     },
     useSortBy
   )

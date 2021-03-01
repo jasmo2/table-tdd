@@ -60,7 +60,7 @@ describe('Table', () => {
 
   describe('Sort', () => {
     test('if sorted enable the colums should rearrange', () => {
-      let { getAllByRole, debug } = render(<Table columns={columns} data={data} sort />)
+      let { getAllByRole } = render(<Table columns={columns} data={data} sort />)
 
       let rows = getAllByRole('row')
       const tableHeader = rows[0]
@@ -72,6 +72,20 @@ describe('Table', () => {
       const tableFirstRow = rows[1].firstElementChild
 
       expect(tableFirstRow).toHaveTextContent('Adrian')
+    })
+    test('sort shall be disabled by default', () => {
+      let { getAllByRole } = render(<Table columns={columns} data={data} />)
+
+      let rows = getAllByRole('row')
+      const tableHeader = rows[0]
+      const firstHeaderLabel = within(tableHeader).getAllByRole('columnheader')[0]
+      expect(firstHeaderLabel).toHaveTextContent('Name')
+
+      fireEvent.click(firstHeaderLabel)
+      rows = getAllByRole('row')
+      const tableFirstRow = rows[1].firstElementChild
+
+      expect(tableFirstRow).toHaveTextContent('Miguel')
     })
   })
 })
