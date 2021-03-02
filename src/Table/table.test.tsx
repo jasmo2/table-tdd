@@ -90,13 +90,18 @@ describe('Table', () => {
   describe('Events', () => {
     describe('Row Click', () => {
       test('enabled', () => {
-        let handleClick = jest.fn()
+        let handleClick = jest.fn((response) => {
+          return response
+        })
+
         const { getAllByRole } = render(<Table columns={columns} data={data} onClick={handleClick} />)
         const rows = getAllByRole('row')
         rows.shift()
 
         fireEvent.click(rows[0])
         expect(handleClick).toHaveBeenCalled()
+
+        expect(handleClick.mock.calls[0][0].name).toBe(data[0].name)
       })
       test('disabled', () => {
         let handleClick = jest.fn()

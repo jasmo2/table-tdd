@@ -6,9 +6,10 @@ type tColumn = {
   accessor: string
 }
 
+type tData = { [s: string]: any }
 type tTable = {
   columns: tColumn[]
-  data: { [s: string]: any }[]
+  data: tData[]
   sort?: boolean
   onClick?: null | Function
 }
@@ -24,7 +25,7 @@ const Table: FC<tTable> = ({ columns, data, sort = false, onClick = null }) => {
     useSortBy
   )
 
-  function handleClick(original: { [s: string]: any }) {
+  function handleClick(original: tData) {
     if (onClick) {
       onClick(original)
     }
