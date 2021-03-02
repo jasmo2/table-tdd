@@ -1,21 +1,27 @@
 import React from 'react'
-import logo from './logo.svg'
-import './App.css'
+import Table from './Table/table'
+import { MdDelete } from 'react-icons/md'
 
+const columns = [
+  { Header: 'Name', accessor: 'name' },
+  { Header: 'Surname', accessor: 'surname' },
+  { Header: 'Phone', accessor: 'phone' },
+  {
+    Header: 'Actions',
+    accessor: 'actions',
+    Cell: (props: any) => {
+      return <div className={'svg-wrapper'}>{props.value}</div>
+    },
+  },
+]
+
+const data = [
+  { name: 'Miguel', surname: 'Kun', phone: '123123', actions: <MdDelete /> },
+  { name: 'Adrian', surname: 'Miyagui', phone: '678654', actions: <MdDelete /> },
+  { name: 'Tatiana', surname: 'Min', phone: '980980', actions: <MdDelete /> },
+]
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a className="App-link" href="https://reactjs.org" target="_blank" rel="noopener noreferrer">
-          Learn React
-        </a>
-      </header>
-    </div>
-  )
+  return <Table columns={columns} data={data} sort />
 }
 
 export default App

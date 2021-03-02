@@ -17,16 +17,19 @@ const Table: FC<tTable> = ({ columns, data, sort = false }) => {
     {
       columns,
       data,
+      // @ts-ignore
       disableSortBy: !sort,
     },
     useSortBy
   )
+  // @ts-ignore
   return (
     <STable {...getTableProps()}>
       <header>
         {headerGroups.map((headerGroup, i) => (
           <h3 {...headerGroup.getHeaderGroupProps()}>
             {headerGroup.headers.map((column) => (
+              // @ts-ignore
               <span {...column.getHeaderProps(column.getSortByToggleProps())}>{column.render('Header')}</span>
             ))}
           </h3>
