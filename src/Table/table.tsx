@@ -1,6 +1,6 @@
 import React, { FC } from 'react'
 import { STable } from './Table.styles'
-import { useTable, useSortBy } from 'react-table'
+import { useTable, useSortBy, UseTableRowProps } from 'react-table'
 type tColumn = {
   Header: string
   accessor: string
@@ -10,9 +10,10 @@ type tTable = {
   columns: tColumn[]
   data: { [s: string]: any }[]
   sort?: boolean
+  onClick?: null | Function
 }
 
-const Table: FC<tTable> = ({ columns, data, sort = false }) => {
+const Table: FC<tTable> = ({ columns, data, sort = false, onClick = null }) => {
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable(
     {
       columns,
@@ -22,6 +23,12 @@ const Table: FC<tTable> = ({ columns, data, sort = false }) => {
     },
     useSortBy
   )
+
+  function handleClick(original: { [s: string]: any }) {
+    if (onClick) {
+      onClick(original)
+    }
+  }
   // @ts-ignore
   return (
     <STable {...getTableProps()}>
@@ -39,7 +46,7 @@ const Table: FC<tTable> = ({ columns, data, sort = false }) => {
         {rows.map((row, i) => {
           prepareRow(row)
           return (
-            <div className={'row'} {...row.getRowProps()} key={`row-${i}`}>
+            <div {...row.getRowProps()} className={'row'} key={`row-${i}`} onClick={() => handleClick(row.original)}>
               {row.cells.map((cell) => (
                 <span className={'cell'} {...cell.getCellProps()}>
                   {cell.render('Cell')}

@@ -18,7 +18,7 @@ const columns = [
 
 const data = [
   { name: 'Miguel', surname: 'Kun', phone: '123123', actions: <MdDelete /> },
-  { name: 'Adrian', surname: 'Miyagui', phone: '678654', actions: <MdDelete /> },
+  { name: 'Adrian', surname: 'Miyuki', phone: '678654', actions: <MdDelete /> },
   { name: 'Tatiana', surname: 'Min', phone: '980980', actions: <MdDelete /> },
 ]
 
@@ -84,6 +84,25 @@ describe('Table', () => {
       const tableFirstRow = rows[1].firstElementChild
 
       expect(tableFirstRow).toHaveTextContent('Miguel')
+    })
+  })
+
+  describe('Events', () => {
+    describe('Row Click', () => {
+      test('enabled', () => {
+        let handleClick = []
+        let clickData = []
+        for (let i = 0; i < data.length; i++) {
+          handleClick.push(jest.fn())
+          clickData.push({ ...data[i], handleClick: handleClick[i] })
+        }
+        const { getAllByRole } = render(<Table columns={columns} data={clickData} />)
+        const rows = getAllByRole('row')
+        rows.shift()
+
+        fireEvent.click(rows[0])
+        expect(handleClick[0]).toHaveBeenCalled()
+      })
     })
   })
 })
