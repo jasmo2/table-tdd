@@ -90,18 +90,22 @@ describe('Table', () => {
   describe('Events', () => {
     describe('Row Click', () => {
       test('enabled', () => {
-        let handleClick = []
-        let clickData = []
-        for (let i = 0; i < data.length; i++) {
-          handleClick.push(jest.fn())
-          clickData.push({ ...data[i], handleClick: handleClick[i] })
-        }
-        const { getAllByRole } = render(<Table columns={columns} data={clickData} />)
+        let handleClick = jest.fn()
+        const { getAllByRole } = render(<Table columns={columns} data={data} onClick={handleClick} />)
         const rows = getAllByRole('row')
         rows.shift()
 
         fireEvent.click(rows[0])
-        expect(handleClick[0]).toHaveBeenCalled()
+        expect(handleClick).toHaveBeenCalled()
+      })
+      test('disabled', () => {
+        let handleClick = jest.fn()
+        const { getAllByRole } = render(<Table columns={columns} data={data} />)
+        const rows = getAllByRole('row')
+        rows.shift()
+
+        fireEvent.click(rows[0])
+        expect(handleClick).toHaveBeenCalledTimes(0)
       })
     })
   })
