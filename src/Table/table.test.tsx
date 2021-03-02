@@ -59,9 +59,8 @@ describe('Table', () => {
   })
 
   describe('Sort', () => {
-    test('if sorted enable the colums should rearrange', () => {
-      let { getAllByRole } = render(<Table columns={columns} data={data} sort />)
-
+    // @ts-ignore
+    function sortTableTrigger({ getAllByRole, within, fireEvent }) {
       let rows = getAllByRole('row')
       const tableHeader = rows[0]
       const firstHeaderLabel = within(tableHeader).getAllByRole('columnheader')[0]
@@ -69,20 +68,19 @@ describe('Table', () => {
 
       fireEvent.click(firstHeaderLabel)
       rows = getAllByRole('row')
+      return rows
+    }
+
+    test('if sorted enable the colums should rearrange', () => {
+      let { getAllByRole } = render(<Table columns={columns} data={data} sort />)
+      const rows = sortTableTrigger({ fireEvent, getAllByRole, within })
       const tableFirstRow = rows[1].firstElementChild
 
       expect(tableFirstRow).toHaveTextContent('Adrian')
     })
     test('sort shall be disabled by default', () => {
       let { getAllByRole } = render(<Table columns={columns} data={data} />)
-
-      let rows = getAllByRole('row')
-      const tableHeader = rows[0]
-      const firstHeaderLabel = within(tableHeader).getAllByRole('columnheader')[0]
-      expect(firstHeaderLabel).toHaveTextContent('Name')
-
-      fireEvent.click(firstHeaderLabel)
-      rows = getAllByRole('row')
+      const rows = sortTableTrigger({ fireEvent, getAllByRole, within })
       const tableFirstRow = rows[1].firstElementChild
 
       expect(tableFirstRow).toHaveTextContent('Miguel')
