@@ -2,6 +2,7 @@ import React from 'react'
 import { MdDelete } from 'react-icons/md'
 import { render, screen, within, fireEvent } from '@testing-library/react'
 import Table from './table'
+import App from '../App'
 
 const columns = [
   { Header: 'Name', accessor: 'name' },
@@ -11,7 +12,23 @@ const columns = [
     Header: 'Actions',
     accessor: 'actions',
     Cell: (props: any) => {
-      return <div className={'svg-wrapper'}>{props.value}</div>
+      return (
+        <div
+          onClick={() => {
+            /*
+            Logic to delete Row in a table
+            // ES6 Syntax use the rvalue if your data åis an array.
+            const dataCopy = [...data]
+            // It should not matter what you name tableProps. It made the most sense to me.
+            dataCopy.splice(props.row.index, 1)
+            setData(dataCopy)
+            */
+          }}
+          className={'svg-wrapper'}
+        >
+          {props.value}
+        </div>
+      )
     },
   },
 ]
@@ -111,6 +128,29 @@ describe('Table', () => {
 
         fireEvent.click(rows[0])
         expect(handleClick).toHaveBeenCalledTimes(0)
+      })
+    })
+
+    describe('Delete Row', () => {
+      test('icon shall always exists', () => {
+        const { getAllByRole } = render(<Table columns={columns} data={data} />)
+        const rows = getAllByRole('row')
+        rows.shift()
+
+        rows.forEach((row) => {
+          expect(row.querySelector('svg')).not.toBeNull()
+        })
+      })
+
+      test('click on trash item', () => {
+        const { getAllByRole, queryByText, debug } = render(<App />)
+        let rows = getAllByRole('row')
+        rows.shift()
+        const rowToDelete = rows[1]
+        fireEvent.click(rowToDelete.querySelector('.svg-wrapper') as HTMLElement)
+
+        const cell = queryByText('Adrian')
+        expect(cell).not.toBeInTheDocument()
       })
     })
   })
