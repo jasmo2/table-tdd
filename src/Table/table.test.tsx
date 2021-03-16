@@ -141,6 +141,25 @@ describe('Table', () => {
           surname: '',
           phone: '',
         })
+
+        const inputs = Array.from(addRowModal.querySelectorAll('input'))
+        const fields = columns.filter((c) => c.Header !== 'Actions')
+
+        for (const field of fields) {
+          const input = inputs.find((input) => input.name === field.accessor)
+
+          const value = field.accessor === 'phone' ? 1234123 : field.accessor
+          fireEvent.change(input as HTMLElement, { target: { value } })
+        }
+
+        const submitBtn = getByText('Add New Row')
+        fireEvent.click(submitBtn)
+
+        rows = getAllByRole('row')
+
+        expect(rows.length).toEqual(5)
+
+        debug(rows)
       })
     })
   })

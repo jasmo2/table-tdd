@@ -1,7 +1,7 @@
-import React, { ChangeEvent, FC, FormEvent, useState } from 'react'
+import React, { ChangeEvent, FC, FormEvent, useEffect, useState } from 'react'
 import { tColumn } from '../Table/table'
 import { SModal } from './modal.styles'
-import { MdClose } from 'react-icons/md'
+import { MdClose, MdDelete } from 'react-icons/md'
 
 interface tModal {
   show?: boolean
@@ -21,9 +21,11 @@ const Modal: FC<tModal> = ({ fields, show = false, onSubmit }) => {
   }
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    onSubmit(values)
+    onSubmit({ ...values, actions: <MdDelete /> })
     handleClose()
   }
+
+  useEffect(() => setVisible(show), [show])
 
   return (
     <SModal show={visible} data-testid="add-row-modal" onSubmit={handleSubmit}>

@@ -46,6 +46,12 @@ const App = ({ columns = null, data = dData }) => {
     }
   }, [newData, columns])
 
+  const handleSubmit = (values: any) => {
+    console.log('TCL: values', values)
+    setData((prev) => {
+      return prev.concat(values)
+    })
+  }
   const filters = useMemo(() => {
     return newColumns.filter((c) => c.Header !== 'Actions')
   }, [newColumns])
@@ -56,7 +62,7 @@ const App = ({ columns = null, data = dData }) => {
         <Table columns={newColumns} data={newData} sort />
         <button onClick={() => setShow((prev) => !prev)}>Add Row</button>
       </div>
-      <Modal show={show} fields={filters} />
+      <Modal show={show} fields={filters} onSubmit={handleSubmit} />
     </>
   )
 }
