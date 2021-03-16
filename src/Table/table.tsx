@@ -1,12 +1,14 @@
 import React, { FC } from 'react'
 import { STable } from './Table.styles'
-import { useTable, useSortBy, UseTableRowProps } from 'react-table'
-type tColumn = {
+import { useTable, useSortBy } from 'react-table'
+export type tColumn = {
   Header: string
   accessor: string
 }
 
-type tData = { [s: string]: any }
+export interface tData {
+  [s: string]: any
+}
 type tTable = {
   columns: tColumn[]
   data: tData[]

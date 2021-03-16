@@ -1,5 +1,6 @@
-import React from 'react'
-import Table from './Table/table'
+import React, { useState, useMemo } from 'react'
+import Table, { tColumn, tData } from './Table/table'
+import Modal from './Modal'
 import { MdDelete } from 'react-icons/md'
 
 const dData = [
@@ -9,9 +10,11 @@ const dData = [
 ]
 
 const App = ({ columns = null, data = dData }) => {
-  const [newData, setData] = React.useState(React.useMemo(() => data, []))
+  const [show, setShow] = useState(false)
+  const [newData, setData] = useState(useMemo(() => data, []))
 
-  const newColumns = React.useMemo(() => {
+  // @ts-ignore
+  const newColumns: tColumn[] = useMemo(() => {
     if (!columns) {
       return [
         { Header: 'Name', accessor: 'name' },
@@ -43,8 +46,15 @@ const App = ({ columns = null, data = dData }) => {
     }
   }, [newData, columns])
 
-  // @ts-ignore
-  return <Table columns={newColumns} data={newData} sort />
+  return (
+    <>
+      <div>
+        <Table columns={newColumns} data={newData} sort />
+        <button onClick={() => setShow((prev) => !prev)}>Add Row</button>
+      </div>
+      <Modal show={show} data={newData as tData[]} />
+    </>
+  )
 }
 
 export default App

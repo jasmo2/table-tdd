@@ -153,5 +153,28 @@ describe('Table', () => {
         expect(cell).not.toBeInTheDocument()
       })
     })
+
+    describe('Add row', () => {
+      test('click external add button', () => {
+        const { getByText, getAllByRole, getByTestId, debug } = render(<App />)
+        let rows = getAllByRole('row')
+        rows.shift()
+        const initialRowsCount = rows.length
+
+        const addButton = getByText('Add Row')
+        expect(addButton).toBeInTheDocument()
+        let addRowModal = getByTestId('add-row-modal')
+        expect(addRowModal).not.toBeVisible()
+
+        fireEvent.click(addButton)
+        addRowModal = getByTestId('add-row-modal')
+        expect(addRowModal).toBeVisible()
+        expect(addRowModal).toContainHTML(`
+          <input name='name'/>
+          <input name='surname'/>
+          <input name='phone'/>
+        `)
+      })
+    })
   })
 })
