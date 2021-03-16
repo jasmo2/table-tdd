@@ -21,7 +21,7 @@ const Modal: FC<tModal> = ({ fields, show = false }) => {
       <div className="wrapper">
         <MdClose className="close-btn" data-testid="close-btn" onClick={handleClose} />
         {fields.map((field) => {
-          return <input key={field.Header} name={field.accessor} />
+          return <input type={field.type || 'text'} key={field.Header} name={field.accessor} />
         })}
       </div>
       <button type="submit">Add New Row</button>

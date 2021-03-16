@@ -4,6 +4,7 @@ import { useTable, useSortBy } from 'react-table'
 export type tColumn = {
   Header: string
   accessor: string
+  type?: string
 }
 
 export interface tData {

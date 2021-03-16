@@ -4,7 +4,7 @@ import React from 'react'
 export const columns = [
   { Header: 'Name', accessor: 'name' },
   { Header: 'Surname', accessor: 'surname' },
-  { Header: 'Phone', accessor: 'phone' },
+  { Header: 'Phone', accessor: 'phone', type: 'phone' },
   {
     Header: 'Actions',
     accessor: 'actions',

@@ -52,4 +52,18 @@ describe('Modal', () => {
       expect(addRowModal).not.toBeVisible()
     })
   })
+
+  describe('Return correct data', () => {
+    test('Correct type each input', () => {
+      const { getByTestId } = render(<Modal fields={fields} show />)
+      const addRowModal = getByTestId('add-row-modal')
+      const inputs = Array.from(addRowModal.querySelectorAll('input'))
+
+      for (const field of fields) {
+        const input = inputs.find((input) => input.name === field.accessor)
+
+        expect(input?.getAttribute('type')).toEqual(field.type || 'text')
+      }
+    })
+  })
 })
