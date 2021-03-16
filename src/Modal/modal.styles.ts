@@ -4,7 +4,7 @@ type SModalType = {
   show: boolean
 }
 
-export const SModal = styled.div<SModalType>`
+export const SModal = styled.form<SModalType>`
   display: ${({ show }) => (show ? 'block' : 'none')};
   visibility: ${({ show }) => (show ? 'visible' : 'hidden')};
   position: fixed;

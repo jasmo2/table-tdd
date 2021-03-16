@@ -46,13 +46,17 @@ const App = ({ columns = null, data = dData }) => {
     }
   }, [newData, columns])
 
+  const filters = useMemo(() => {
+    return newColumns.filter((c) => c.Header !== 'Actions')
+  }, [newColumns])
+
   return (
     <>
       <div>
         <Table columns={newColumns} data={newData} sort />
         <button onClick={() => setShow((prev) => !prev)}>Add Row</button>
       </div>
-      <Modal show={show} data={newData as tData[]} />
+      <Modal show={show} fields={filters} />
     </>
   )
 }

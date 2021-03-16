@@ -169,11 +169,11 @@ describe('Table', () => {
         fireEvent.click(addButton)
         addRowModal = getByTestId('add-row-modal')
         expect(addRowModal).toBeVisible()
-        expect(addRowModal).toContainHTML(`
-          <input name='name'/>
-          <input name='surname'/>
-          <input name='phone'/>
-        `)
+        expect(addRowModal).toHaveFormValues({
+          name: '',
+          surname: '',
+          phone: '',
+        })
       })
     })
   })
