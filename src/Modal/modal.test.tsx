@@ -7,23 +7,24 @@ import { columns, data } from '../mockTesting/data'
 import { tColumn } from '../Table/table'
 
 describe('Modal', () => {
+  let mockSubmit = jest.fn()
   let fields: tColumn[]
   beforeAll(() => {
     fields = columns.filter((c) => c.Header !== 'Actions')
   })
 
   test('renders properly', () => {
-    render(<Modal fields={fields} show />)
+    render(<Modal onSubmit={mockSubmit} fields={fields} show />)
   })
 
   test('is hidden by default', () => {
-    const { getByTestId } = render(<Modal fields={fields} />)
+    const { getByTestId } = render(<Modal onSubmit={mockSubmit} fields={fields} />)
     let addRowModal = getByTestId('add-row-modal')
     expect(addRowModal).not.toBeVisible()
   })
 
   test('is display correct input-fields based on columns', () => {
-    const { getByTestId } = render(<Modal fields={fields} show />)
+    const { getByTestId } = render(<Modal onSubmit={mockSubmit} fields={fields} show />)
     let addRowModal = getByTestId('add-row-modal')
     expect(addRowModal).toBeVisible()
     expect(addRowModal).toHaveFormValues({
@@ -35,7 +36,7 @@ describe('Modal', () => {
 
   describe('Close', () => {
     test('on svg button', () => {
-      const { getByTestId } = render(<Modal fields={fields} show />)
+      const { getByTestId } = render(<Modal onSubmit={mockSubmit} fields={fields} show />)
       const addRowModal = getByTestId('add-row-modal')
       const closeSvg = getByTestId('close-btn')
 
@@ -44,7 +45,7 @@ describe('Modal', () => {
     })
 
     test('on submit', () => {
-      const { getByTestId, getByText } = render(<Modal fields={fields} show />)
+      const { getByTestId, getByText } = render(<Modal onSubmit={mockSubmit} fields={fields} show />)
       const addRowModal = getByTestId('add-row-modal')
       const submitBtn = getByText('Add New Row')
 
@@ -54,8 +55,8 @@ describe('Modal', () => {
   })
 
   describe('Return correct data', () => {
-    test('Correct type each input', () => {
-      const { getByTestId } = render(<Modal fields={fields} show />)
+    test('types should match each input', () => {
+      const { getByTestId } = render(<Modal onSubmit={mockSubmit} fields={fields} show />)
       const addRowModal = getByTestId('add-row-modal')
       const inputs = Array.from(addRowModal.querySelectorAll('input'))
 
@@ -64,6 +65,31 @@ describe('Modal', () => {
 
         expect(input?.getAttribute('type')).toEqual(field.type || 'text')
       }
+    })
+    test('on submit', () => {
+      const onSubmit = jest.fn((values) => {
+        expect(values).toEqual({
+          name: 'name',
+          surname: 'surname',
+          phone: '1234123',
+        })
+      })
+      const { getByTestId, getByText } = render(<Modal fields={fields} show onSubmit={onSubmit} />)
+      const addRowModal = getByTestId('add-row-modal')
+      const inputs = Array.from(addRowModal.querySelectorAll('input'))
+
+      for (const field of fields) {
+        const input = inputs.find((input) => input.name === field.accessor)
+
+        const value = field.accessor === 'phone' ? 1234123 : field.accessor
+        fireEvent.change(input as HTMLElement, { target: { value } })
+      }
+
+      const submitBtn = getByText('Add New Row')
+
+      fireEvent.click(submitBtn)
+
+      expect(onSubmit).toBeCalled()
     })
   })
 })
