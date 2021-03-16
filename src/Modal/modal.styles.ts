@@ -14,4 +14,15 @@ export const SModal = styled.form<SModalType>`
   height: 80vh;
 
   transform: translate(50%, 50%);
+
+  .wrapper {
+    position: relative;
+  }
+
+  .close-btn {
+    position: absolute;
+
+    top: 30px;
+    right: 30px;
+  }
 `
